@@ -10,7 +10,7 @@ app.engine('html', require('ejs').renderFile);
 app.set('views', __dirname + '/views');
 
 app.get('/', function(req,res) {
-    res.render('index.jade');
+    res.render('index.html');
 });
 
 app.get('/classroom', function(req,res) {
