@@ -48,6 +48,16 @@
       color: #fff;
     }
 
+    #video-container video {
+      position: relative;
+      top:-150px;
+      left:530px;
+    }
+
+    .chat-input {
+      margin-left: 67px;
+    }
+
     .cam-video {
       background-color: #222;
       width: 150px;
@@ -86,7 +96,7 @@
         <video autoplay="true" class="cam-video" id="professor" muted="true"></video>
       </div>
 
-      <div class="span3">
+      <div class="span3 chat-input">
         <input id="msg-input" placeholder="Enter message here." type="text">
       </div>
     </div>
@@ -101,6 +111,7 @@
   <script src="/static/js/bootstrap.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/static/js/holla.js"></script><script>
+    $("#professor").hide();
     var socket = io.connect("http://10.232.35.24:3000");
     var rtc = holla.createClient({
       host: "10.232.35.24",
@@ -123,6 +134,7 @@
 
     rtc.register("jezeniel", function(worked) {
       holla.createFullStream(function(err, stream) {
+        $("#professor").show();
         holla.pipe(stream, $("#professor"));
 
         rtc.on("call", function(call) {
