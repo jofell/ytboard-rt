@@ -19,6 +19,36 @@
       max-height: 499px;
       height: 499px;
     }
+    #prevBlock {
+      position: absolute;
+      min-height: 100%;
+      top: 0;
+      left: 0;
+      width: 20%;
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+      padding-top: 20%;
+      opacity: 0;
+      z-index: 100;
+    }
+    #nextBlock {
+      position: absolute;
+      min-height: 100%;
+      top: 0;
+      right: 0;
+      width: 20%;
+      padding-top: 20%;
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+      opacity: 0;
+      z-index: 100;
+    }
+    #slideBoard {
+      height: 100%;
+      width: 100%
+    }
   </style>
   
 </head>
@@ -27,7 +57,9 @@
   <div id="uploader">
     <form action="/grab" method="post" id="myDropzone" class="dropzone clickable"></form>
   </div>
-  <div class="hide" id="slideBoard">
+  <div id="slideBoard" class="hide">
+    <div id="prevBlock"><span class="fui-arrow-left" style="font-size: 40px"></span></div>
+    <div id="nextBlock"><span class="fui-arrow-right" style="font-size: 40px"></span></div>
     <img class="hide" id="currentSlide"/>
     <img class="hide" id="replacingSlide"/>
   </div>
@@ -44,12 +76,32 @@ Dropzone.options.myDropzone = { success:
       '/static/images/slides/' + document.slyduckObj.slide_id +
       '/slide-'+ document.slyduckObj.index +'.jpg');
     $('#currentSlide').show();
+    
+    $('#nextBlock').mouseover(function(){
+      this.fadeIn(this);
+    })
+    $('#prevBlock').mouseover(function(){
+      this.fadeIn(this);
+    })
+    $('#nextBlock').mouseout(function(){
+      this.fadeOut(this);
+    })
+    $('#prevBlock').mouseout(function(){
+      this.fadeOut(this);
+    })
 
-    $('#currentSlide').click(function(){
+    $('#nextBlock').click(function(){
       if (document.slyduckObj.index < document.slyduckObj.pages - 1) {
         $('#currentSlide').attr('src', 
           '/static/images/slides/' + document.slyduckObj.slide_id +
           '/slide-'+ ++document.slyduckObj.index +'.jpg');
+      }
+    });
+    $('#prevBlock').click(function(){
+      if (document.slyduckObj.index > 0) {
+        $('#currentSlide').attr('src', 
+          '/static/images/slides/' + document.slyduckObj.slide_id +
+          '/slide-'+ --document.slyduckObj.index +'.jpg');
       }
     });
   } };
