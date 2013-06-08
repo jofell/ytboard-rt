@@ -3,22 +3,59 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require("socket.io").listen(server);
+var im = require("imagemagick");
+var mkpath = require("mkpath");
 
 //Express
 app.use('/static', express.static(__dirname + '/static'));
 app.engine('html', require('ejs').renderFile);
 app.set('views', __dirname + '/views');
 
+app.use(express.bodyParser({ keepExtensions: true, uploadDir: "uploads" })); 
+
+
 app.get('/', function(req,res) {
-    res.render('index.html');
+  res.render('index.html');
 });
 
 app.get('/classroom', function(req,res) {
-    res.render('classroom.html');
+  res.render('classroom.html');
 });
 
-app.get('/student', function(req,res) {
-    res.render('student.jade');
+app.get('/slyduck', function(req, res){
+  res.render('slyduck.html');
+});
+
+app.post('/grab', function (req, res) {
+  // connect-form adds the req.form object
+  // we can (optionally) define onComplete, passing
+  // the exception (if any) fields parsed, and files parsed
+  im.identify(['-format', '%n', req.files.file.path], function(err, pages){
+    if (err) throw err;
+    
+    var iter = 0;
+    var currTime = new Date().getTime() + '';
+    var outFolder = __dirname + '/static/images/slides/' + currTime;
+    
+    mkpath( outFolder, function (err) {
+      if (err) throw err;
+      console.log('Directory structure red/green/violet created');
+    });
+    
+    var seriesConvert = function(iteration) {
+      
+      im.convert(['-density', 288, req.files.file.path +'[' + iteration + ']', 
+                  '-resize', '25%', outFolder + '/slide-' + iteration + '.jpg'], 
+       function(err, stdout){
+         if (err) throw err;
+         if (iter == 0) res.end(JSON.stringify({ slide_id: currTime }));
+         iter++;
+         if (iter < pages) seriesConvert(iter);
+       });
+    }
+    
+    seriesConvert(iter);
+  });
 });
 
 server.listen(3000);

@@ -4,6 +4,9 @@
 <head>
   <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
   <link href="/static/css/flat-ui.css" rel="stylesheet">
+  <link href="/static/css/dropzone.css" rel="stylesheet">
+  <link href="/static/css/basic.css" rel="stylesheet">
+  <script type="text/javascript" src="static/js/dropzone.min.js"></script>
   <style>
     body {
       background-color: #139C4C;
@@ -84,7 +87,7 @@
     <div class="row">
       <div class="span1" id="sidebar"></div>
 
-      <div class="span9" id="whiteboard"></div>
+      <iframe class="span9" id="whiteboard" src="/slyduck"></iframe>
 
       <div class="span3" id="chatbox">
         <ul id="messages"></ul>
