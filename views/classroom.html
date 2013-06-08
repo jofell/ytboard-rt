@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="/static/css/flat-ui.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #139C4C;
+    }
+
+    .container {
+      padding-right: 10px;
+      padding-left: 15px;
+      background-color: #fff;
+      height: 100%;
+      width: 1024px;
+    }
+
+    #whiteboard {
+      background-color: #888;
+      height: 500px;
+      margin-left: 0;
+    }
+
+    #sidebar {
+      background-color: #666;
+      height: 500px;
+    }
+
+    #chatbox {
+      background-color: #444;
+      height: 500px;
+      margin-left: 0;
+      overflow: hidden;
+    }
+
+    #chatbox ul li {
+      list-style-type: none;
+      word-wrap:break-word;
+    }
+
+    #main {
+      margin: auto;
+    }
+
+    #messages {
+      color: #fff;
+    }
+
+    .cam-video {
+      background-color: #222;
+      width: 150px;
+      height: 150px;
+      margin: auto;
+    }
+  </style>
+
+  <title></title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="masthead">
+      <ul class="nav nav-pills pull-right">
+        <li>Welcome User!</li>
+      </ul>
+
+      <h3 class="muted"><img height="50px" src="static/img/ytboard-logo.png"
+      width="100px"></h3>
+    </div>
+    <hr>
+
+    <div class="row">
+      <div class="span1" id="sidebar"></div>
+
+      <div class="span9" id="whiteboard"></div>
+
+      <div class="span3" id="chatbox">
+        <ul id="messages"></ul>
+      </div>
+    </div>
+
+    <div class="row">
+      <div id="video-container" class="span8 offset1">
+        <video autoplay="true" class="cam-video" id="professor" muted="true"></video>
+      </div>
+
+      <div class="span3">
+        <input id="msg-input" placeholder="Enter message here." type="text">
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="footer text-center">
+      <p>Copyright 2013</p>
+    </div>
+  </div>
+  <script src="/static/js/jquery-1.8.3.min.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/static/js/holla.js"></script><script>
+    var socket = io.connect("http://10.232.35.24:3000");
+    var rtc = holla.createClient({
+      host: "10.232.35.24",
+      port: 3000
+    });
+
+
+    $("#msg-input").on('change', function() {
+      var msg = $("#msg-input").val();
+      $("#msg-input").val('');
+      socket.emit('message-send', {
+        msg: msg
+      });
+    });
+
+    socket.on('message-update', function(data) {
+      var msg = data.msgupdate.msg;
+      $("#messages").append("<li>" + msg + "<\/li>");
+    });
+
+    rtc.register("jezeniel", function(worked) {
+      holla.createFullStream(function(err, stream) {
+        holla.pipe(stream, $("#professor"));
+
+        rtc.on("call", function(call) {
+          call.addStream(stream);
+          call.answer();
+        });
+      });
+    });
+  </script>
+</body>
+</html>

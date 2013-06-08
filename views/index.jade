@@ -1,0 +1,43 @@
+extends layout
+
+block head
+  style
+    body {
+        background-color:#139C4C;
+    }
+    .container {
+        padding-right:10px;
+        padding-left:15px;
+        background-color:#fff;
+        height: 100%;
+    }
+
+block content
+  .container
+    .masthead
+      .nav.nav-pills.pull-right
+        ul.nav.nav-pills
+          li
+            a.btn.btn-success(href="#") Login
+          li
+            a.btn.btn-success(href="#") Register
+      h3
+        img(src="static/img/ytboard-logo.png", width="100px", height="50px")
+    hr
+    .hero-unit
+      h1 Welcome to YTboard!
+      p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat
+    .row
+      .span4
+        h4 Heading
+        p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat
+
+      .span4
+        h4 Heading
+        p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat
+
+      .span4
+        h4 Heading
+        p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat
+    .footer.text-center
+      p &copy; Copyright 2013

@@ -1,0 +1,94 @@
+extends layout
+
+block head
+  style.
+    body {
+        background-color:#139C4C;
+    }
+    .container {
+        padding-right:10px;
+        padding-left:15px;
+        background-color:#fff;
+        height: 100%;
+        width: 1024px;
+    }
+    #whiteboard{
+      background-color:#888;
+      height: 500px;
+      margin-left:0;
+    }
+    #sidebar{
+      background-color:#666;
+      height: 500px;
+    }
+    #chatbox{
+      background-color:#444;
+      height: 500px;
+      margin-left:0;
+    }
+    #main {
+      margin: auto;
+    }
+    #messages{
+      color:#fff;
+    }
+    .cam-video {
+      background-color: #222;
+      width: 150px;
+      height: 150px;
+      margin: auto;
+    }
+
+block content
+  .container
+    .masthead
+      ul.nav.nav-pills.pull-right
+        li Welcome User!
+      h3.muted
+        img( src="static/img/ytboard-logo.png",width="100px",height="50px")
+    hr
+    .row
+      #sidebar.span1
+      #whiteboard.span9
+      #chatbox.span3
+        ul#messages
+        input#msg-input(type="text", placeholder="Enter message here.")
+
+    .row
+      #video-container
+        video#professor.cam-video(autoplay="true", muted="true")
+
+
+    hr
+    .footer.text-center
+      p Copyright 2013
+
+block scripts
+  script(src="/socket.io/socket.io.js")
+  script(src="/static/js/holla.js")
+  script.
+    var socket = io.connect("http://10.232.35.24:3000");
+    var rtc = holla.createClient({host: "10.232.35.24", port: 3000});
+
+
+    $("#msg-input").on('change', function(){
+      var msg = $("#msg-input").val();
+      $("#msg-input").val('');
+      socket.emit('message-send', { msg: msg});
+    });
+
+    socket.on('message-update', function(data){
+      var msg = data.msgupdate.msg;
+      $("#messages").append("<li>" + msg + "</li>");
+    });
+
+    rtc.register("jezeniel", function(worked) {
+      holla.createFullStream(function(err, stream) {
+        holla.pipe(stream, $("#professor"));
+
+        rtc.on("call", function(call) {
+          call.addStream(stream);
+          call.answer();
+        });
+      });
+    });
