@@ -1,17 +1,65 @@
 <!DOCTYPE html>
-
 <html>
 <head>
+  <title></title>
   <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
   <link href="/static/css/flat-ui.css" rel="stylesheet">
   <link href="/static/css/dropzone.css" rel="stylesheet">
   <link href="/static/css/basic.css" rel="stylesheet">
+  <script type="text/javascript" src="static/js/jquery-1.8.3.min.js"></script>
   <script type="text/javascript" src="static/js/dropzone.min.js"></script>
-  <title></title>
+  <style type="text/css">
+    .slideBoard {
+      background-position: center;
+      background-size: contain;
+      max-height: 499px;
+      height: 499px;
+    }
+    body {
+      max-height: 499px;
+      height: 499px;
+    }
+  </style>
+  
 </head>
 
 <body>
-  <form action="/grab" method="post" class="dropzone clickable">
-  </form>
+  <div id="uploader">
+    <form action="/grab" method="post" id="myDropzone" class="dropzone clickable"></form>
+  </div>
+  <div class="hide" id="slideBoard">
+    <img class="hide" id="currentSlide"/>
+    <img class="hide" id="replacingSlide"/>
+  </div>
 </body>
+<script type="text/javascript">
+Dropzone.options.myDropzone = { success: 
+  function(file, response){
+    this.removeFile(file);
+    console.log(response);
+    document.slyduckObj = JSON.parse(response);
+    $('#uploader').hide();
+    $('#slideBoard').show();
+    $('#currentSlide').attr('src', 
+      '/static/images/slides/' + document.slyduckObj.slide_id +
+      '/slide-'+ document.slyduckObj.index +'.jpg');
+    $('#currentSlide').show();
+
+    $('#currentSlide').click(function(){
+      if (document.slyduckObj.index < document.slyduckObj.pages - 1) {
+        $('#currentSlide').attr('src', 
+          '/static/images/slides/' + document.slyduckObj.slide_id +
+          '/slide-'+ ++document.slyduckObj.index +'.jpg');
+      }
+    });
+  } };
+
+function preload(arrayOfImages) {
+    $(arrayOfImages).each(function(){
+        $('<img/>')[0].src = this;
+        // Alternatively you could use:
+        // (new Image()).src = this;
+    });
+}
+</script>
 </html>

@@ -48,7 +48,11 @@ app.post('/grab', function (req, res) {
                   '-resize', '25%', outFolder + '/slide-' + iteration + '.jpg'], 
        function(err, stdout){
          if (err) throw err;
-         if (iter == 0) res.end(JSON.stringify({ slide_id: currTime }));
+         if (iter == 0) res.end(JSON.stringify({ 
+           slide_id: currTime, 
+           pages: parseInt(pages),
+           index: 0})
+         );
          iter++;
          if (iter < pages) seriesConvert(iter);
        });
