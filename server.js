@@ -11,7 +11,7 @@ app.use('/static', express.static(__dirname + '/static'));
 app.engine('html', require('ejs').renderFile);
 app.set('views', __dirname + '/views');
 
-app.use(express.bodyParser({ keepExtensions: true, uploadDir: "uploads" })); 
+app.use(express.bodyParser({ keepExtensions: true, uploadDir: "uploads" }));
 
 
 app.get('/', function(req,res) {
@@ -20,6 +20,10 @@ app.get('/', function(req,res) {
 
 app.get('/classroom', function(req,res) {
   res.render('classroom.html');
+});
+
+app.get('/whiteboard', function(req,res) {
+  res.render('whiteboard.html');
 });
 
 app.get('/slyduck', function(req, res){
@@ -32,20 +36,20 @@ app.post('/grab', function (req, res) {
   // the exception (if any) fields parsed, and files parsed
   im.identify(['-format', '%n', req.files.file.path], function(err, pages){
     if (err) throw err;
-    
+
     var iter = 0;
     var currTime = new Date().getTime() + '';
     var outFolder = __dirname + '/static/images/slides/' + currTime;
-    
+
     mkpath( outFolder, function (err) {
       if (err) throw err;
       console.log('Directory structure red/green/violet created');
     });
-    
+
     var seriesConvert = function(iteration) {
-      
-      im.convert(['-density', 288, req.files.file.path +'[' + iteration + ']', 
-                  '-resize', '25%', outFolder + '/slide-' + iteration + '.jpg'], 
+
+      im.convert(['-density', 288, req.files.file.path +'[' + iteration + ']',
+                  '-resize', '25%', outFolder + '/slide-' + iteration + '.jpg'],
        function(err, stdout){
          if (err) throw err;
          if (iter == 0) res.end(JSON.stringify({ 
@@ -57,7 +61,7 @@ app.post('/grab', function (req, res) {
          if (iter < pages) seriesConvert(iter);
        });
     }
-    
+
     seriesConvert(iter);
   });
 });
@@ -68,6 +72,12 @@ var rtc = holla.createServer(server);
 //socket.io
 io.sockets.on('connection', function(socket) {
     socket.join('room');
+
+
+    socket.on('drawClick', function(data) {
+      console.log(data);
+      io.sockets.in('room').emit('draw', { x: data.x, y: data.y, type: data.type});
+    });
 
     socket.emit('news', { hello: 'world!'});
     socket.on('my other event', function(data){

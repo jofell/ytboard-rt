@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+  <title></title>
+</head>
+
+<body>
+  <article></article>
+  <script src="/static/js/jquery-1.8.3.min.js"></script>
+  <script src="/static/js/jquery.event.drag-2.2.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/static/js/holla.js"></script>
+  <script src="/static/js/whiteboard.js"></script>
+  <script>
+    $("#professor").hide();
+    var socket = io.connect("http://10.232.35.24:3000");
+
+
+    $("#msg-input").on('change', function() {
+      var msg = $("#msg-input").val();
+      $("#msg-input").val('');
+      socket.emit('message-send', {
+        msg: msg
+      });
+    });
+
+    socket.on('message-update', function(data) {
+      var msg = data.msgupdate.msg;
+      $("#messages").append("<li>" + msg + "<\/li>");
+    });
+
+
+  </script>
+</body>
+</html>
