@@ -36,11 +36,13 @@
       height: 500px;
       margin-left: 0;
       overflow: hidden;
+      overflow-y:scroll;
     }
 
     #chatbox ul li {
       list-style-type: none;
       word-wrap:break-word;
+      border-bottom:solid 1px #777;
     }
 
     #main {
@@ -140,13 +142,15 @@
 
     rtc.register("jezeniel", function(worked) {
       holla.createFullStream(function(err, stream) {
+        if(!err) {
         $("#professor").show();
-        holla.pipe(stream, $("#professor"));
+          holla.pipe(stream, $("#professor"));
 
-        rtc.on("call", function(call) {
-          call.addStream(stream);
-          call.answer();
-        });
+          rtc.on("call", function(call) {
+            call.addStream(stream);
+            call.answer();
+          });
+        }
       });
     });
   </script>
