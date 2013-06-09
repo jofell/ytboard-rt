@@ -52,8 +52,8 @@ app.post('/grab', function (req, res) {
                   '-resize', '25%', outFolder + '/slide-' + iteration + '.jpg'],
        function(err, stdout){
          if (err) throw err;
-         if (iter == 0) res.end(JSON.stringify({ 
-           slide_id: currTime, 
+         if (iter == 0) res.end(JSON.stringify({
+           slide_id: currTime,
            pages: parseInt(pages),
            index: 0})
          );
@@ -73,19 +73,28 @@ var rtc = holla.createServer(server);
 io.sockets.on('connection', function(socket) {
     socket.join('room');
 
-
+    //whiteboard
     socket.on('drawClick', function(data) {
       console.log(data);
       io.sockets.in('room').emit('draw', { x: data.x, y: data.y, type: data.type});
     });
 
-    socket.emit('news', { hello: 'world!'});
-    socket.on('my other event', function(data){
-        console.log(data);
-    });
-
+    //chatbox
     socket.on('message-send', function(data){
         io.sockets.in('room').emit('message-update', { msgupdate: data});
+    });
+
+    //slyduck
+    socket.on('slide start', function(data) {
+      io.sockets.in('room').emit('cli slide start', { slide: data });
+    });
+
+    socket.on('slide next', function(data) {
+      io.sockets.in('room').emit('cli slide next', { slide: data });
+    });
+
+    socket.on('slide previous', function(data) {
+      io.sockets.in('room').emit('cli slide previous', { slide: data });
     });
 
 });

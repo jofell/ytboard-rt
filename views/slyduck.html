@@ -54,7 +54,7 @@
       width: 100%
     }
   </style>
-  
+
 </head>
 
 <body>
@@ -68,19 +68,23 @@
     <img class="hide" id="replacingSlide"/>
   </div>
 </body>
+<script src="/socket.io/socket.io.js"></script>
 <script type="text/javascript">
-
-Dropzone.options.myDropzone = { success: 
+var socket = io.connect("http://10.232.35.24:3000");
+Dropzone.options.myDropzone = { success:
   function(file, response){
     this.removeFile(file);
     console.log(response);
     document.slyduckObj = JSON.parse(response);
     $('#uploader').hide();
     $('#slideBoard').show();
-    $('#currentSlide').attr('src', 
+
+    $('#currentSlide').attr('src',
       '/static/images/slides/' + document.slyduckObj.slide_id +
       '/slide-'+ document.slyduckObj.index +'.jpg');
-    
+
+    socket.emit("slide start", {directory: document.slyduckObj.slide_id, slideid: document.slyduckObj.index});
+
     $('#prevBlock').hover(function() {
       $('#prevArrow').fadeIn('fast');
     }, function() {
@@ -91,21 +95,23 @@ Dropzone.options.myDropzone = { success:
     }, function() {
       $('#nextArrow').fadeOut('fast');
     });
-    
+
     $('#currentSlide').show();
-    
+
     $('#nextBlock').click(function(){
       if (document.slyduckObj.index < document.slyduckObj.pages - 1) {
-        $('#currentSlide').attr('src', 
+        $('#currentSlide').attr('src',
           '/static/images/slides/' + document.slyduckObj.slide_id +
           '/slide-'+ ++document.slyduckObj.index +'.jpg');
+        socket.emit('slide next', { directory: document.slyduckObj.slide_id, slideid: document.slyduckObj.index });
       }
     });
     $('#prevBlock').click(function(){
       if (document.slyduckObj.index > 0) {
-        $('#currentSlide').attr('src', 
+        $('#currentSlide').attr('src',
           '/static/images/slides/' + document.slyduckObj.slide_id +
           '/slide-'+ --document.slyduckObj.index +'.jpg');
+        socket.emit('slide previous', { directory: document.slyduckObj.slide_id, slideid: document.slyduckObj.index });
       }
     });
   } };
@@ -117,5 +123,26 @@ function preload(arrayOfImages) {
         // (new Image()).src = this;
     });
 }
+
+function updateSlide(data) {
+  $('#uploader').hide();
+  $('#currentSlide').show();
+  $('#currentSlide').attr('src',
+        '/static/images/slides/' + data.slide.directory +
+        '/slide-'+ data.slide.slideid +'.jpg');
+}
+
+ socket.on('cli slide start', function(data) {
+    updateSlide(data);
+ });
+
+ socket.on('cli slide previous', function(data){
+    updateSlide(data);
+ });
+
+ socket.on('cli slide next', function(data){
+    updateSlide(data);
+ });
+
 </script>
 </html>
