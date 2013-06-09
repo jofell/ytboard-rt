@@ -91,6 +91,7 @@
       <div class="span1" id="sidebar">
           <a href="#" class="btn" id="WB">WB</a>
           <a href="#" class="btn" id="SD">SD</a>
+          <a href="#" class="btn" id="SP">SD</a>
       </div>
 
       <iframe class="span9" id="whiteboard" src="/whiteboard" scrolling='no'></iframe>
@@ -136,6 +137,11 @@
     $("#SD").on('click', function () {
       $("#whiteboard").attr('src', '/slyduck');
       socket.emit("slyduck", { url: '/slyduck'});
+    });
+
+    $("#SP").on('click', function () {
+      $("#whiteboard").attr('src', 'http://192.168.1.100:8000');
+      socket.emit("sparks", { url: 'http://192.168.1.100:8000'});
     });
 
     $("#msg-input").on('change', function() {

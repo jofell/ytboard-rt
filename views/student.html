@@ -157,6 +157,11 @@
       $("#whiteboard").attr("src", data.url);
     });
 
+    socket.on('cli sparks', function(data) {
+      console.log("heheh");
+      $("#whiteboard").attr("src", data.url);
+    });
+
     rtc.register("student", function(worked) {
       holla.createFullStream(function(err, stream) {
         if(!err) {

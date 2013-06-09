@@ -92,8 +92,12 @@ io.sockets.on('connection', function(socket) {
 
 
     socket.on('slyduck', function(data) {
-      console.log("ASDSAADSADSADDSADDSAD");
       io.sockets.in('room').emit('cli slyduck', { url : data.url });
+    });
+
+
+    socket.on('sparks', function(data) {
+      io.sockets.in('room').emit('cli sparks', { url : data.url });
     });
 
     //chatbox
