@@ -80,7 +80,7 @@
       <ul class="nav nav-pills pull-right">
         <li>Welcome Jopes!</li>
       </ul>
-      <h3 class="muted"><img height="50px" src="static/img/ytboard-logo.png"
+      <h3 class="muted"><img height="50px" src="/static/img/ytboard-logo.png"
       width="100px"></h3>
     </div>
     <hr>
@@ -88,10 +88,15 @@
       <h4>Class title</h4>
     </div>
     <div class="row">
-      <div class="span1" id="sidebar"></div>
+      <div class="span1" id="sidebar">
+          <a href="#" class="btn" id="WB">WB</a>
+          <a href="#" class="btn" id="SD">SD</a>
+      </div>
+
+      <iframe class="span9" id="whiteboard" src="/whiteboard" scrolling='no'></iframe>
 
 
-      <iframe class="span9" id="whiteboard" src="/slyduck" scrolling='no'></iframe>
+      <!-- <iframe class="span9" id="whiteboard" src="/slyduck" scrolling='no'></iframe> -->
 
       <div class="span3" id="chatbox">
         <ul id="messages"></ul>
@@ -120,12 +125,16 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="/static/js/holla.js"></script><script>
     $("#professor").hide();
-    var socket = io.connect("http://10.232.35.24:3000");
-    var rtc = holla.createClient({
-      host: "10.232.35.24",
-      port: 3000
+    var socket = io.connect("http://10.232.35.24");
+    var rtc = holla.createClient();
+
+    $("#WB").on('click', function () {
+      $("#whiteboard").attr('src', '/whiteboard');
     });
 
+    $("#SD").on('click', function () {
+      $("#whiteboard").attr('src', '/slyduck');
+    });
 
     $("#msg-input").on('change', function() {
       var msg = $("#msg-input").val();
