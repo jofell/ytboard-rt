@@ -30,6 +30,11 @@ app.get('/slyduck', function(req, res){
   res.render('slyduck.html');
 });
 
+app.get('/student', function(req, res){
+  res.render('student.html');
+});
+
+
 app.post('/grab', function (req, res) {
   // connect-form adds the req.form object
   // we can (optionally) define onComplete, passing

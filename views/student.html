@@ -149,17 +149,16 @@
       $("#messages").append("<li>" + msg + "<\/li>");
     });
 
-    rtc.register("jezeniel", function(worked) {
+    rtc.register("student", function(worked) {
       holla.createFullStream(function(err, stream) {
         if(!err) {
-        $("#professor").show();
-          holla.pipe(stream, $("#professor"));
+          var call = rtc.call("jezeniel");
+          call.addStream(stream);
 
-          rtc.on("call", function(call) {
-            call.addStream(stream);
-            call.answer();
+          call.on('ready', function(stream){
+            $("#professor").show();
+            holla.pipe(stream, $("#professor"));
           });
-
         }
       });
     });
