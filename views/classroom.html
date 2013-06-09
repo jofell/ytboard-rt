@@ -125,15 +125,17 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="/static/js/holla.js"></script><script>
     $("#professor").hide();
-    var socket = io.connect("http://10.232.35.24");
+    var socket = io.connect("http://192.168.1.100:3000");
     var rtc = holla.createClient();
 
     $("#WB").on('click', function () {
       $("#whiteboard").attr('src', '/whiteboard');
+      socket.emit("whiteboard", { url: '/whiteboard'});
     });
 
     $("#SD").on('click', function () {
       $("#whiteboard").attr('src', '/slyduck');
+      socket.emit("slyduck", { url: '/slyduck'});
     });
 
     $("#msg-input").on('change', function() {
@@ -149,7 +151,7 @@
       $("#messages").append("<li>" + msg + "<\/li>");
     });
 
-    rtc.register("jezeniel", function(worked) {
+    rtc.register("professor", function(worked) {
       holla.createFullStream(function(err, stream) {
         if(!err) {
         $("#professor").show();

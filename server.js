@@ -84,6 +84,18 @@ io.sockets.on('connection', function(socket) {
       io.sockets.in('room').emit('draw', { x: data.x, y: data.y, type: data.type});
     });
 
+    //sidebar
+
+    socket.on('whiteboard', function(data) {
+      io.sockets.in('room').emit('cli whiteboard', { url : data.url });
+    });
+
+
+    socket.on('slyduck', function(data) {
+      console.log("ASDSAADSADSADDSADDSAD");
+      io.sockets.in('room').emit('cli slyduck', { url : data.url });
+    });
+
     //chatbox
     socket.on('message-send', function(data){
         io.sockets.in('room').emit('message-update', { msgupdate: data});

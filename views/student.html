@@ -85,12 +85,11 @@
     </div>
     <hr>
     <div class="row">
-      <h4>Class title</h4>
+      <h4 class="span2">Single Sign On</h4>
     </div>
     <div class="row">
       <div class="span1" id="sidebar">
-          <a href="#" class="btn" id="WB">WB</a>
-          <a href="#" class="btn" id="SD">SD</a>
+
       </div>
 
       <iframe class="span9" id="whiteboard" src="/whiteboard" scrolling='no'></iframe>
@@ -105,7 +104,7 @@
 
     <div class="row">
       <div id="video-container" class="span8 offset1">
-        <video autoplay="true" class="cam-video" id="professor" muted="true"></video>
+        <video autoplay="true" class="cam-video" id="professor"></video>
       </div>
 
       <div class="span3 chat-input">
@@ -125,7 +124,7 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="/static/js/holla.js"></script><script>
     $("#professor").hide();
-    var socket = io.connect("http://10.232.35.24");
+    var socket = io.connect("http://192.168.1.100:3000");
     var rtc = holla.createClient();
 
     $("#WB").on('click', function () {
@@ -146,13 +145,22 @@
 
     socket.on('message-update', function(data) {
       var msg = data.msgupdate.msg;
-      $("#messages").append("<li>" + msg + "<\/li>");
+      $("#messages").append("<li>" + msg + "</li>");
+    });
+
+    socket.on('cli whiteboard', function(data) {
+      $("#whiteboard").attr("src", data.url);
+    });
+
+    socket.on('cli slyduck', function(data) {
+      console.log("heheh");
+      $("#whiteboard").attr("src", data.url);
     });
 
     rtc.register("student", function(worked) {
       holla.createFullStream(function(err, stream) {
         if(!err) {
-          var call = rtc.call("jezeniel");
+          var call = rtc.call("professor");
           call.addStream(stream);
 
           call.on('ready', function(stream){
