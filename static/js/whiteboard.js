@@ -13,7 +13,7 @@
     App.ctx.strokeStyle = "#000";
     App.ctx.lineWidth = 5;
     App.ctx.lineCap = "round";
-    App.socket = io.connect('http://192.168.1.100:3000/');
+    App.socket = io.connect('http://localhost:3000/');
     console.log("INIT");
     App.socket.on('draw', function(data) {
       return App.draw(data.x, data.y, data.type);

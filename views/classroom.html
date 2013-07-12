@@ -126,7 +126,7 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="/static/js/holla.js"></script><script>
     $("#professor").hide();
-    var socket = io.connect("http://192.168.1.100:3000");
+    var socket = io.connect("http://localhost:3000");
     var rtc = holla.createClient();
 
     $("#WB").on('click', function () {
@@ -140,8 +140,8 @@
     });
 
     $("#SP").on('click', function () {
-      $("#whiteboard").attr('src', 'http://192.168.1.100:8000');
-      socket.emit("sparks", { url: 'http://192.168.1.100:8000'});
+      $("#whiteboard").attr('src', 'http://localhost:8000');
+      socket.emit("sparks", { url: 'http://localhost:8000'});
     });
 
     $("#msg-input").on('change', function() {
